@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>September Pacing Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --nitro-purple:#331953; --deep-purple:#482077; --cars-purple:#65299D;
+  --power-purple:#9754E6; --great-teal:#03A0AB; --sky-blue:#1B82EE;
+  --brand-black:#141817; --white:#FFFFFF;
+  --ink:#1d1526; --muted:#6b6478; --line:#e7e2ee; --bg:#f6f4fa;
+  --card:#ffffff; --tint:#f2edf9;
+  --danger:#C0362C; --danger-bg:#fbecea; --warn:#B26A00; --good:#03A0AB;
+  --grad-fusion:linear-gradient(135deg,#482077 0%,#9754E6 100%);
+  --grad-text:linear-gradient(90deg,#9653E5 0%,#1B82EE 50%,#03AEB9 100%);
+  --shadow:0 1px 3px rgba(51,25,83,.08),0 8px 24px rgba(51,25,83,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Figtree',system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.dm{font-family:'DM Sans',sans-serif;letter-spacing:-.03em}
+a{color:var(--cars-purple)}
+.wrap{max-width:1320px;margin:0 auto;padding:0 20px 64px}
+header{background:var(--grad-fusion);color:#fff;padding:30px 0 26px;margin-bottom:22px;box-shadow:var(--shadow)}
+header .wrap{padding-bottom:0}
+.brandrow{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.wings{width:40px;height:26px;flex:0 0 auto}
+.brandname{font-family:'DM Sans';font-weight:700;letter-spacing:-.03em;font-size:19px}
+h1{font-size:33px;font-weight:700;margin:0 0 6px;line-height:1.05}
+.sub{font-size:15px;opacity:.9;font-weight:400;max-width:900px}
+.asof{font-size:13px;opacity:.8;margin-top:10px}
+.filters{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.fgroup{display:flex;flex-direction:column;gap:5px}
+.fgroup label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+select{font-family:'Figtree';font-size:14px;padding:9px 34px 9px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%2365299D' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>") no-repeat right 12px center;appearance:none;color:var(--ink);cursor:pointer;min-width:170px}
+select:focus{outline:none;border-color:var(--cars-purple)}
+.reset{margin-left:auto;align-self:flex-end;font-family:'Figtree';font-weight:600;font-size:13px;color:var(--cars-purple);background:var(--tint);border:1.5px solid var(--line);border-radius:9px;padding:9px 16px;cursor:pointer}
+.reset:hover{border-color:var(--power-purple)}
+.scope{font-size:13px;color:var(--muted);align-self:flex-end;padding-bottom:9px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi .k-top{position:absolute;top:0;left:0;right:0;height:4px;background:var(--cars-purple)}
+.kpi.acct .k-top{background:var(--deep-purple)}
+.kpi.teal .k-top{background:var(--great-teal)}
+.kpi.sky .k-top{background:var(--sky-blue)}
+.kpi.risk .k-top{background:var(--danger)}
+.kpi .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:2px 0 6px}
+.kpi .val{font-family:'DM Sans';font-weight:700;letter-spacing:-.03em;font-size:30px;line-height:1}
+.kpi .note{font-size:12px;color:var(--muted);margin-top:5px}
+.kpi.attn .val{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.risk-banner{background:var(--danger-bg);border:1px solid #f2c4bd;border-left:5px solid var(--danger);border-radius:12px;padding:15px 18px;margin-bottom:24px;display:none}
+.risk-banner.show{display:block}
+.risk-banner h3{margin:0 0 4px;font-size:16px;color:#8f271e}
+.risk-banner p{margin:0 0 10px;font-size:13.5px;color:#7a2a23}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#fff;border:1px solid #eeb9b1;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;color:#8f271e;display:inline-flex;align-items:center;gap:6px}
+.chip .n{background:var(--danger);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;font-weight:700}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 4px;font-size:17px}
+.panel .psub{font-size:12.5px;color:var(--muted);margin:0 0 16px}
+.bar-row{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin-bottom:11px}
+.bar-row .nm{font-size:12.5px;font-weight:600;text-align:right;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bartrack{position:relative;height:22px;background:var(--tint);border-radius:6px}
+.barfill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;display:flex;align-items:center;transition:width .5s ease}
+.barfill span{font-size:11px;font-weight:700;color:#fff;padding-left:8px;white-space:nowrap}
+.tgt-mark{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--nitro-purple);z-index:3}
+.tgt-mark::after{content:'';position:absolute;top:-3px;left:-3px;width:8px;height:8px;background:var(--nitro-purple);border-radius:50%}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.funnel-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.funnel-lbl{width:118px;font-size:12.5px;font-weight:600;text-align:right}
+.funnel-bar{height:30px;border-radius:7px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-family:'DM Sans';font-weight:700;font-size:14px;min-width:44px;transition:width .5s ease}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{font-family:'DM Sans';font-weight:500;letter-spacing:-.02em;font-size:14.5px;padding:10px 18px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+.tab.active{background:var(--cars-purple);color:#fff;border-color:var(--cars-purple);font-weight:700}
+.tsection{display:none}.tsection.active{display:block}
+.thead-note{font-size:13px;color:var(--muted);margin:0 0 12px}
+.tablecard{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.scrollx{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:900px}
+thead th{background:var(--nitro-purple);color:#fff;font-family:'DM Sans';font-weight:500;text-align:left;padding:12px 12px;position:sticky;top:0;white-space:nowrap;font-size:12.5px}
+thead th.num{text-align:right}
+thead th.hilite{background:var(--cars-purple)}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td.num{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr:nth-child(even){background:#faf8fd}
+tbody tr.risk-row{background:var(--danger-bg)!important;box-shadow:inset 4px 0 0 var(--danger)}
+tbody tr.risk-row:hover{background:#f9e2de!important}
+tbody tr:hover{background:var(--tint)}
+td.rank{font-family:'DM Sans';font-weight:700;color:var(--muted);text-align:center;width:42px}
+td.seat{font-family:'DM Sans';font-weight:700;color:var(--nitro-purple)}
+td.hilite{font-family:'DM Sans';font-weight:700;color:var(--nitro-purple)}
+.repcell{font-size:12.5px;color:var(--muted)}
+.flag{display:inline-block;margin-left:6px;font-size:12px;cursor:help}
+.risk-badge{display:inline-block;margin-left:8px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.04em;color:#fff;background:var(--danger);padding:2px 7px;border-radius:5px;vertical-align:middle;cursor:help;white-space:nowrap}
+.seatmark{font-size:10px;color:var(--power-purple);cursor:help;vertical-align:super;margin-left:3px}
+.attbadge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+.att-good{background:#d7f2f0;color:#046b6f}
+.att-mid{background:#fdeecf;color:#8a5200}
+.att-low{background:var(--danger-bg);color:#8f271e}
+.miss{color:#c33;font-weight:700}
+.shared{color:#b8b2c2}
+footer{margin-top:34px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;line-height:1.6}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:1fr}}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brandrow">
+      <svg class="wings" viewBox="0 0 60 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M4 30 C4 12 20 6 30 6 C40 6 56 12 56 30" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <path d="M14 32 C14 20 22 16 30 16 C38 16 46 20 46 32" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" opacity=".55"/>
+      </svg>
+      <span class="brandname">Cars.com &nbsp;|&nbsp; Marketplace Sales Ops</span>
+    </div>
+    <h1>September pacing &amp; seat performance</h1>
+    <div class="sub">Field-channel, seat-level view built to help front-line leaders see which seats are — and aren't — driving sales this month. Totals cover the full field; the three stack ranks cover the 96 active (staffed) seats, worst&nbsp;&rarr;&nbsp;best on sales, late-stage pipeline, and in-store activity.</div>
+    <div class="asof">Data as of Sep 16, 2026 &middot; Field Provision Channel only &middot; 113 field seats (96 active + 17 OPEN) &middot; Source: MP_Template_9162026v3.xlsx</div>
+  </div>
+</header>
+<div class="wrap">
+  <div class="filters">
+    <div class="fgroup"><label for="fRegion">Field Region</label><select id="fRegion"><option value="">All Regions</option></select></div>
+    <div class="fgroup"><label for="fMgr">Manager</label><select id="fMgr"><option value="">All Managers</option></select></div>
+    <div class="scope" id="scope"></div>
+    <button class="reset" id="reset">Reset filters</button>
+  </div>
+  <div class="kpis" id="kpis"></div>
+  <div class="risk-banner" id="riskBanner">
+    <h3>&#9888;&nbsp; At-risk seats — lowest 10% on multiple measures</h3>
+    <p id="riskText"></p><div class="chips" id="riskChips"></div>
+  </div>
+  <div class="charts">
+    <div class="panel">
+      <h3>Sales vs. director target</h3>
+      <p class="psub">Closed-won deals (bar) against each director&rsquo;s Sept launch target (marker). Director targets total 153 &mdash; set below the summed AE seat targets (282).</p>
+      <div id="mgrChart"></div>
+      <div class="legend"><span><i class="sw" style="background:var(--cars-purple)"></i> Sales (closed won)</span><span><i class="sw" style="background:var(--nitro-purple);width:8px;height:8px;border-radius:50%"></i> Director target</span></div>
+    </div>
+    <div class="panel">
+      <h3>Pipeline coverage</h3>
+      <p class="psub">Opportunity counts by stage for the current selection.</p>
+      <div id="funnel"></div>
+      <div class="legend" style="margin-top:12px"><span><i class="sw" style="background:var(--great-teal)"></i> Early (Discovery, Presentation)</span><span><i class="sw" style="background:var(--power-purple)"></i> Late (Follow-Up, Closing)</span><span><i class="sw" style="background:var(--cars-purple)"></i> Closed Won</span></div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" data-t="sales">Stack Rank &middot; Sales</button>
+    <button class="tab" data-t="late">Stack Rank &middot; Late-Stage Pipeline</button>
+    <button class="tab" data-t="visits">Stack Rank &middot; September Activity</button>
+  </div>
+  <div class="tsection active" id="sec-sales"><p class="thead-note">All seats ranked <strong>worst &rarr; best</strong> by September sales (closed-won deals). Rank 1 = fewest sales.</p><div class="tablecard"><div class="scrollx"><table id="tbl-sales"></table></div></div></div>
+  <div class="tsection" id="sec-late"><p class="thead-note">All seats ranked <strong>worst &rarr; best</strong> by September late-stage pipeline (Follow-Up + Closing). Rank 1 = fewest.</p><div class="tablecard"><div class="scrollx"><table id="tbl-late"></table></div></div></div>
+  <div class="tsection" id="sec-visits"><p class="thead-note">All seats ranked <strong>worst &rarr; best</strong> by September in-store visits — distinct accounts visited in person, de-duplicated by CCID. Rank 1 = fewest.</p><div class="tablecard"><div class="scrollx"><table id="tbl-visits"></table></div></div></div>
+  <footer id="foot"></footer>
+</div>
+<script>
+const D = {"SEATS":[{"seat":"Atlanta01","rep":"Heidi Kukoly","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":1,"late":0,"early":0,"visits":13,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Atlanta02","rep":"Leisa Rowe","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":2,"late":1,"early":10,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Atlanta03","rep":"Ernest Perry","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":3,"late":0,"early":2,"visits":5,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Atlanta04","rep":"Jona Joseph","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":3,"late":1,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Austin01","rep":"Jay McVey","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":1,"target":2,"late":0,"early":2,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Baltimore01","rep":"Lois Windsor","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":0,"target":2,"late":0,"early":13,"visits":49,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"BayArea01","rep":"Jenny Aburto","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":0,"target":3,"late":2,"early":7,"visits":14,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"BayArea02","rep":"Timothy Leong","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":0,"target":3,"late":2,"early":3,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"BayArea03","rep":"Emily Bassett","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":1,"target":2,"late":0,"early":6,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Birmingham01","rep":"Mark Baum","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":4,"late":3,"early":6,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"BostonAE02","rep":"Christopher Dinh","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":0,"target":2,"late":0,"early":1,"visits":22,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"BostonAE03","rep":"Derek Tardanico","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":0,"target":1,"late":0,"early":0,"visits":15,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"BostonAE04","rep":"JJ Sciacca","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":1,"target":3,"late":0,"early":0,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Charlotte01","rep":"Dylan Lawrence","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":3,"late":0,"early":2,"visits":19,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Charlotte02","rep":"Joseph McGrath","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":4,"late":0,"early":2,"visits":7,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Chicago01","rep":"Alexis Stimac","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":0,"target":1,"late":0,"early":1,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Chicago02","rep":"Steven Retz","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":1,"target":1,"late":2,"early":3,"visits":8,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Chicago03","rep":"Brian Wirth","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":0,"target":1,"late":1,"early":1,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Chicago04","rep":"Valerie Citro-Geraci","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":1,"target":1,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Chicago05","rep":"Curt Grigas","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":0,"target":1,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Chicago06","rep":"Jack Bianciotto","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":0,"target":2,"late":0,"early":6,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"ChicagoSeniorAE01","rep":"Courtney Corning","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":1,"target":4,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Cincinnati01","rep":"Gregory Carnes","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":2,"late":1,"early":12,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Columbus01","rep":"Aubrey Bauman","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":2,"late":0,"early":0,"visits":14,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Dallas01","rep":"Melinda Hawkes","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":1,"target":4,"late":0,"early":5,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Dayton01","rep":"Adam Snyder","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":2,"late":0,"early":1,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Denver01","rep":"Lauren Hughes","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":0,"target":2,"late":2,"early":6,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Denver02","rep":"Matt Goff","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":1,"target":2,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Denver03","rep":"Harry Kammholz","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":2,"target":2,"late":0,"early":3,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Detroit01","rep":"Allan Leitch","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":3,"late":1,"early":2,"visits":24,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Detroit02","rep":"Devonte Cox","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":1,"target":3,"late":0,"early":1,"visits":25,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FairfieldAE01","rep":"Nick Alfera","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":0,"target":2,"late":4,"early":1,"visits":27,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FairfieldAE03","rep":"Shelby Hill","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":1,"target":2,"late":2,"early":14,"visits":18,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FloridaSeniorAE01","rep":"Nicholas Thomas","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":3,"late":5,"early":3,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FortLauderdale01","rep":"Gabriella Price","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":2,"late":2,"early":4,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FortLauderdale02","rep":"Becky Fajardo","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":2,"late":2,"early":3,"visits":9,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FortWorth01","rep":"Darren Whitelock","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":1,"target":1,"late":0,"early":1,"visits":7,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FortWorth02","rep":"Sadie Svitenko","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":1,"target":2,"late":1,"early":0,"visits":6,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"FtWayne01","rep":"Sarah Hoffman","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":2,"late":1,"early":1,"visits":6,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"GreatLakesSeniorAE01","rep":"Zach Corbin","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":3,"late":1,"early":3,"visits":19,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Greensboro01","rep":"Alivia Brigman","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":2,"late":0,"early":3,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Harrisburg01","rep":"Christina Wells","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":0,"target":3,"late":2,"early":8,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Houston02","rep":"Kenya Alvarez","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":0,"target":2,"late":3,"early":7,"visits":8,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Houston03","rep":"Necole Goodman","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":0,"target":3,"late":1,"early":2,"visits":7,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Indianapolis01","rep":"Michelle Heath","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":1,"target":1,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Jacksonville02","rep":"Rob Storey","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":3,"late":2,"early":7,"visits":22,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"LosAngeles01","rep":"Andie Berthiaume","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":0,"target":3,"late":1,"early":2,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"LosAngeles02","rep":"Ben Miller","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":1,"target":2,"late":6,"early":3,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"LosAngeles03","rep":"Shellane McMillen","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":0,"target":2,"late":2,"early":7,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"LosAngeles04","rep":"Eric Ideman","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":0,"target":3,"late":3,"early":10,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"LosAngeles07","rep":"Scott Bechtloff","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":0,"target":2,"late":0,"early":15,"visits":9,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Louisville01","rep":"Karen (Dean) Bowling","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":2,"late":0,"early":3,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Miami01","rep":"Maria Graves","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":1,"target":2,"late":7,"early":1,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"MidwestSeniorAE01","rep":"Dori Cooper","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":1,"target":3,"late":1,"early":0,"visits":16,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Milwaukee01","rep":"Jarrod Cromwell","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":0,"target":1,"late":0,"early":1,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NJAE01","rep":"Anthony Ferrara","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":3,"late":0,"early":3,"visits":8,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NJAE03","rep":"Donald Burbach","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":3,"late":0,"early":2,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NJAE04","rep":"Bradon Greth","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":4,"late":8,"early":15,"visits":13,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NYAE01","rep":"Michael Guerrini","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":3,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NYAE02","rep":"Nicholas Villani","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":2,"late":0,"early":0,"visits":26,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NYAE03","rep":"Mohyeldin Ahmed","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":1,"target":2,"late":2,"early":0,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NYAE04","rep":"Michael Murphy","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":3,"late":0,"early":0,"visits":14,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NYAE06","rep":"Matt Kimmel","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":1,"late":0,"early":0,"visits":8,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Nashville01","rep":"Landry Tidwell","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":1,"target":3,"late":1,"early":3,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NewOrleans01","rep":"Abby Meredith","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":3,"late":0,"early":3,"visits":18,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NewOrleans02","rep":"Robert Israel","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":4,"late":0,"early":0,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NortheastOhio01","rep":"Cherise Reynolds","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":1,"late":4,"early":1,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"NortheastOhio02","rep":"Marissa Cannato","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":2,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Oklahoma01","rep":"Ben Lindner","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":0,"target":4,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Orlando01","rep":"Jeffrey Fickes","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":3,"late":1,"early":5,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Orlando02","rep":"Annemarie Gusmano","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":1,"target":2,"late":0,"early":4,"visits":7,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Peoria01","rep":"Carly Ewen","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":0,"target":2,"late":0,"early":6,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Philadelphia01","rep":"Lenny Vannelli","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":4,"late":1,"early":2,"visits":24,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Philadelphia02","rep":"Jennifer Carbonell","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":1,"target":3,"late":0,"early":7,"visits":21,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Philadelphia03","rep":"Anthony Gizzi","mgr":"Ian McDonald","region":"Field East","sub":"Mid-Atlantic Region","sales":0,"target":3,"late":2,"early":4,"visits":7,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Phoenix01","rep":"Nina Maric","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":1,"target":1,"late":0,"early":7,"visits":30,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Phoenix02","rep":"Nicole Kerr","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":0,"target":2,"late":0,"early":27,"visits":10,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Pittsburgh01","rep":"Paul Madeano","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":3,"late":0,"early":0,"visits":10,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Pittsburgh02","rep":"Joseph Gizzi","mgr":"John Kitson","region":"Field East","sub":"Central Region","sales":0,"target":2,"late":1,"early":4,"visits":9,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Raleigh01","rep":"Bryan Mand","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":3,"late":0,"early":3,"visits":6,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Raleigh02","rep":"David Nyamu","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":4,"late":0,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Sacramento01","rep":"Sonia Lara","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":0,"target":3,"late":0,"early":0,"visits":11,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"SaltLakeCity01","rep":"Kyle Bubak","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":0,"target":4,"late":0,"early":6,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"SanAntonio01","rep":"Nick Fowler","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":0,"target":2,"late":0,"early":0,"visits":1,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"SanDiego01","rep":"Victoria Raines","mgr":"Kelly Chapman","region":"Field West","sub":"Southwest Region","sales":0,"target":4,"late":4,"early":8,"visits":5,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Seattle01","rep":"Matthew Bauer","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":1,"target":3,"late":3,"early":8,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"StLouis02","rep":"Matt Cancila","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":0,"target":3,"late":0,"early":1,"visits":4,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Tacoma01","rep":"Jenna Paoletti","mgr":"Andrew Pelc","region":"Field West","sub":"Northwest Region","sales":1,"target":4,"late":0,"early":0,"visits":13,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Tallahassee01","rep":"Melody Stapleton","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":1,"target":4,"late":1,"early":1,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Tampa02","rep":"Kevin Delph","mgr":"Kevin Lerner","region":"Field East","sub":"Florida Region","sales":0,"target":2,"late":0,"early":6,"visits":6,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"Tulsa01","rep":"Sharla Koob","mgr":"John David Scozzaro","region":"Field West","sub":"Texas Region","sales":1,"target":2,"late":1,"early":5,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"TwinCities01","rep":"Demi Westfall","mgr":"Ramsey Weber","region":"Field West","sub":"Midwest Region","sales":0,"target":2,"late":1,"early":0,"visits":0,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"VirginiaBeach01","rep":"Matt Cumbow","mgr":"Jim Wyatt","region":"Field East","sub":"Mid-South Region","sales":0,"target":4,"late":0,"early":7,"visits":13,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"WashingtonDC01","rep":"Sean Eager","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":1,"target":1,"late":0,"early":1,"visits":5,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"WashingtonDC02","rep":"Paul Zetlmeisl","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":3,"target":2,"late":2,"early":8,"visits":3,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]},{"seat":"WashingtonDC03","rep":"Patrick Scarborough","mgr":"Alex Otwell","region":"Field East","sub":"DC/New England Region","sales":0,"target":3,"late":0,"early":13,"visits":8,"multi":0,"pipePrimary":0,"pipeShared":0,"ownerSeats":[]}],"EXTRA":[{"kind":"open_seat","seat":"Allentown02","mgr":"Ian McDonald","region":"Field East","target":2,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"Austin02","mgr":"John David Scozzaro","region":"Field West","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"Charlotte03","mgr":"Jim Wyatt","region":"Field East","target":2,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"FairfieldAE02","mgr":"Alex Otwell","region":"Field East","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"Houston01","mgr":"John David Scozzaro","region":"Field West","target":3,"visits":2,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"KansasCity01","mgr":"Andrew Pelc","region":"Field West","target":2,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"LosAngeles05","mgr":"Kelly Chapman","region":"Field West","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"LosAngeles06","mgr":"Kelly Chapman","region":"Field West","target":2,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"NJAE02","mgr":"Ian McDonald","region":"Field East","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"NYAE05","mgr":"Ian McDonald","region":"Field East","target":2,"visits":4,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"NortheastNewEnglandAE01","mgr":"Alex Otwell","region":"Field East","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"NortheastSeniorAE01","mgr":"Alex Otwell","region":"Field East","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"Philadelphia04","mgr":"Ian McDonald","region":"Field East","target":2,"visits":7,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"SanAntonio02","mgr":"John David Scozzaro","region":"Field West","target":4,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"StLouis01","mgr":"Andrew Pelc","region":"Field West","target":2,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"Tampa01","mgr":"Kevin Lerner","region":"Field East","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"open_seat","seat":"WashingtonDC04","mgr":"Alex Otwell","region":"Field East","target":3,"visits":0,"sales":0,"late":0,"early":0},{"kind":"orphan_pipe","seat":null,"mgr":"Andrew Pelc","region":"Field West","target":0,"visits":0,"sales":1,"late":0,"early":2},{"kind":"orphan_pipe","seat":null,"mgr":"Kevin Lerner","region":"Field East","target":0,"visits":0,"sales":0,"late":0,"early":2},{"kind":"orphan_pipe","seat":null,"mgr":"Ian McDonald","region":"Field East","target":0,"visits":0,"sales":0,"late":1,"early":11},{"kind":"orphan_pipe","seat":null,"mgr":"Alex Otwell","region":"Field East","target":0,"visits":0,"sales":0,"late":0,"early":12},{"kind":"orphan_pipe","seat":null,"mgr":"Kelly Chapman","region":"Field West","target":0,"visits":0,"sales":0,"late":1,"early":5},{"kind":"orphan_pipe","seat":null,"mgr":"John David Scozzaro","region":"Field West","target":0,"visits":0,"sales":0,"late":6,"early":3}]};
+const C={cars:'#65299D',teal:'#03A0AB',power:'#9754E6',sky:'#1B82EE',deep:'#482077',nitro:'#331953'};
+const DIRTGT={"Ian McDonald":19,"Alex Otwell":16,"Kevin Lerner":19,"Jim Wyatt":13,"John Kitson":19,"John David Scozzaro":19,"Andrew Pelc":19,"Kelly Chapman":16,"Ramsey Weber":13};
+const DIRREGION={"Alex Otwell":"Field East","Ian McDonald":"Field East","Jim Wyatt":"Field East","John Kitson":"Field East","Kevin Lerner":"Field East","Andrew Pelc":"Field West","John David Scozzaro":"Field West","Kelly Chapman":"Field West","Ramsey Weber":"Field West"};
+function directorTarget(){const r=el('fRegion').value,m=el('fMgr').value;return Object.keys(DIRTGT).filter(d=>(!m||d===m)&&(!r||DIRREGION[d]===r)).reduce((a,d)=>a+DIRTGT[d],0);}
+const fmt=n=>(n==null?'0':n.toLocaleString());
+const el=id=>document.getElementById(id);
+const overallScore=d=>d.sales*1000+d.late*30+d.early*8+d.visits;
+const ALL=D.SEATS.concat(D.EXTRA);
+const regions=[...new Set(ALL.map(d=>d.region).filter(Boolean))].sort();
+const mgrs=[...new Set(ALL.map(d=>d.mgr).filter(Boolean))].sort();
+regions.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;el('fRegion').appendChild(o);});
+mgrs.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;el('fMgr').appendChild(o);});
+function fx(rows){const r=el('fRegion').value,m=el('fMgr').value;return rows.filter(d=>(!r||d.region===r)&&(!m||d.mgr===m));}
+const activeFiltered=()=>fx(D.SEATS);
+const widgetFiltered=()=>fx(ALL);
+
+function computeRisk(rows){
+  const N=rows.length,k=Math.max(1,Math.ceil(N*0.10)),bs={};
+  ['sales','late','visits'].forEach(m=>{const s=[...rows].sort((a,b)=>(a[m]-b[m])||(overallScore(a)-overallScore(b))||a.seat.localeCompare(b.seat));bs[m]=new Set(s.slice(0,k).map(d=>d.seat));});
+  const flag={};rows.forEach(d=>{let c=0;['sales','late','visits'].forEach(m=>{if(bs[m].has(d.seat))c++;});if(c>=1)flag[d.seat]={count:c};});
+  return {flag,k};
+}
+function renderKPIs(active,wrows,risk){
+  const ws=k=>wrows.reduce((a,d)=>a+(d[k]||0),0);
+  const sales=ws('sales'),target=directorTarget(),late=ws('late'),early=ws('early');
+  const att=target?Math.round(sales/target*100):0;
+  const nRisk=Object.values(risk.flag).filter(f=>f.count>=2).length;
+  const nOpen=wrows.filter(d=>d.kind==='open_seat').length;
+  const cards=[
+    {c:'',lbl:'Active seats',val:active.length,note:`${active.filter(d=>d.sales===0).length} with 0 sales &middot; +${nOpen} OPEN in totals`},
+    {c:'',lbl:'September Sales',val:sales,note:'Closed-won deals (incl. OPEN)'},
+    {c:'acct',lbl:'September Target',val:target,note:'Director rollup'},
+    {c:'attn',lbl:'Attainment',val:att+'%',note:`${sales} of ${target} deals`},
+    {c:'teal',lbl:'Late-Stage Pipe',val:late,note:`Early-stage: ${early}`},
+    {c:'risk',lbl:'At-risk seats',val:nRisk,note:'Bottom 10% on 2+ ranks'}
+  ];
+  el('kpis').innerHTML=cards.map(c=>`<div class="kpi ${c.c}"><div class="k-top"></div><div class="lbl">${c.lbl}</div><div class="val">${typeof c.val==='number'?fmt(c.val):c.val}</div><div class="note">${c.note}</div></div>`).join('');
+}
+function renderRiskBanner(active,risk){
+  const multi=active.filter(d=>risk.flag[d.seat]&&risk.flag[d.seat].count>=2).sort((a,b)=>risk.flag[b.seat].count-risk.flag[a.seat].count||overallScore(a)-overallScore(b));
+  const b=el('riskBanner');
+  if(!multi.length){b.classList.remove('show');return;}
+  b.classList.add('show');
+  el('riskText').textContent=`${multi.length} active seat${multi.length>1?'s':''} land in the lowest-performing 10% on two or more of the three stack ranks (sales, late-stage pipeline, in-store activity). These are the clearest "not driving anything" cases in the current view — start here.`;
+  el('riskChips').innerHTML=multi.map(d=>`<span class="chip">${d.seat} <span class="n">${risk.flag[d.seat].count}/3</span></span>`).join('');
+}
+function renderMgrChart(wrows){
+  const map={};
+  wrows.forEach(d=>{if(!d.mgr)return;(map[d.mgr]=map[d.mgr]||{sales:0});map[d.mgr].sales+=d.sales||0;});
+  const arr=Object.entries(map).map(([m,v])=>({m,sales:v.sales,target:DIRTGT[m]||0})).sort((a,b)=>b.sales-a.sales);
+  const max=Math.max(1,...arr.map(a=>Math.max(a.sales,a.target)));
+  el('mgrChart').innerHTML=arr.map(a=>{const sw=a.sales/max*100,tw=a.target/max*100;
+    return `<div class="bar-row"><div class="nm" title="${a.m}">${a.m}</div><div class="bartrack"><div class="barfill" style="width:${sw}%;background:var(--cars-purple)"><span>${a.sales}</span></div><div class="tgt-mark" style="left:${tw}%" title="Director target ${a.target}"></div></div></div>`;}).join('');
+}
+function renderFunnel(wrows){
+  const ws=k=>wrows.reduce((a,d)=>a+(d[k]||0),0);
+  const early=ws('early'),late=ws('late'),won=ws('sales'),max=Math.max(1,early,late,won);
+  const seg=[['Early stage',early,C.teal],['Late stage',late,C.power],['Closed won',won,C.cars]];
+  el('funnel').innerHTML=seg.map(([l,v,col])=>`<div class="funnel-row"><div class="funnel-lbl">${l}</div><div class="funnel-bar" style="width:${Math.max(6,v/max*100)}%;background:${col}">${v}</div></div>`).join('');
+}
+function attBadge(s,t){if(!t)return '<span class="attbadge att-low">n/a</span>';const p=Math.round(s/t*100),cls=p>=100?'att-good':(p>=50?'att-mid':'att-low');return `<span class="attbadge ${cls}">${p}%</span>`;}
+function renderTable(metric,active,risk){
+  const sorted=[...active].sort((a,b)=>(a[metric]-b[metric])||(overallScore(a)-overallScore(b))||a.seat.localeCompare(b.seat));
+  const cols=[{h:'Seat'},{h:'Rep'},{h:'Manager'},{h:'Sept Sales',k:'sales'},{h:'Sales Target',k:'target'},{h:'Attain'},{h:'Late-Stage Pipe',k:'late'},{h:'Early-Stage Pipe',k:'early'},{h:'In-Store Visits',k:'visits'}];
+  const numeric=new Set(['sales','target','late','early','visits']);
+  const head='<thead><tr><th class="num">#</th>'+cols.map(c=>`<th class="${(c.k&&numeric.has(c.k))||c.h==='Attain'?'num':''} ${c.k===metric?'hilite':''}">${c.h}</th>`).join('')+'</tr></thead>';
+  const body='<tbody>'+sorted.map((d,i)=>{
+    const f=risk.flag[d.seat],isMulti=f&&f.count>=2;
+    const badge=isMulti?` <span class="risk-badge" title="Lowest 10% on ${f.count} of 3 stack ranks">AT RISK</span>`:'';
+    const cell=k=>`<td class="num ${k===metric?'hilite':''}">${k==='target'&&d.target===0?'<span class=miss>0</span>':fmt(d[k])}</td>`;
+    return `<tr class="${isMulti?'risk-row':''}"><td class="rank">${i+1}</td><td class="seat">${d.seat}</td><td class="repcell">${d.rep}${badge}</td><td>${d.mgr}</td>${cell('sales')}${cell('target')}<td class="num">${attBadge(d.sales,d.target)}</td>${cell('late')}${cell('early')}${cell('visits')}</tr>`;
+  }).join('')+'</tbody>';
+  el('tbl-'+metric).innerHTML=head+body;
+}
+function render(){
+  const active=activeFiltered(),wrows=widgetFiltered(),risk=computeRisk(active);
+  const nOpen=wrows.filter(d=>d.kind==='open_seat').length;
+  el('scope').innerHTML=`Ranking ${active.length} active seats &middot; widgets include ${nOpen} OPEN`;
+  renderKPIs(active,wrows,risk);renderRiskBanner(active,risk);renderMgrChart(wrows);renderFunnel(wrows);
+  renderTable('sales',active,risk);renderTable('late',active,risk);renderTable('visits',active,risk);
+}
+el('fRegion').addEventListener('change',render);
+el('fMgr').addEventListener('change',render);
+el('reset').addEventListener('click',()=>{el('fRegion').value='';el('fMgr').value='';render();});
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tsection').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');el('sec-'+t.dataset.t).classList.add('active');
+}));
+el('foot').innerHTML=`<strong>Definitions &amp; method.</strong> Anchored at the <em>seat</em> level. <strong>The KPI cards and charts (widgets) cover the full field picture</strong> — all field seats including those the hierarchy lists as OPEN (vacant), plus pipeline booked to owners of OPEN seats — so no metric drops out when a seat goes vacant. <strong>The three stack ranks and the at-risk flag include only the 96 active (staffed) seats</strong>, since a vacant seat can't be coached. <strong>Sales</strong> = Closed Won. <strong>Late-stage</strong> = Follow-Up + Closing. <strong>Early-stage</strong> = Discovery + Presentation. <strong>In-store visits</strong> = distinct accounts (CCID) with an "In-Person Meeting" logged to the seat. Field Region (East/West) and manager rollups from the hierarchy / target file; OPEN pipeline is classified as field by the opportunity's own AE Region. All pipeline dated September 2026. <strong>At-risk (AT RISK badge):</strong> an active seat in the lowest 10% (rounded up) of the current selection on 2+ of the 3 stack ranks — recomputed as you filter.`;
+render();
+</script>
+</body>
+</html>
